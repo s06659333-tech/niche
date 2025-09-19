@@ -13,22 +13,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # ⚠ cache指定は外します（lockfileがないためアノテーションが出る）
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install deps
+      - name: Prepare project
         run: |
           npm init -y
-          npm install @xenova/transformers@^2.17.2 onnxruntime-node@^1.18.0
+          npm pkg set scripts.generate="node scripts/generate.mjs"
+
+      # Transformers.js を Node で動かすため onnxruntime-node を追加
+      - name: Install deps (CPU)
+        run: |
+          npm install @xenova/transformers@2.17.2 onnxruntime-node@1.18.0
 
       - name: Generate pages with transformers.js (no API cost)
         env:
           TRANSFORMERS_CACHE: ./.cache
         run: |
-          node scripts/generate.mjs
+          npm run generate
 
       - name: Build/refresh sitemap.xml
         run: |
@@ -41,3 +46,4 @@ jobs:
           git add -A
           git commit -m "daily content: $(date -u +'%Y-%m-%d')" || echo "No changes"
           git push
+
