@@ -2,7 +2,7 @@ name: daily-build
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 毎日 12:00 JST 相当（03:00 UTC）
+    - cron: '0 3 * * *'   # 毎日 12:00 JST 相当（03:00 UTC）
   workflow_dispatch:
 
 jobs:
@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,42 +19,28 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Prepare project
+      - name: Init project
         run: |
           npm init -y
           npm pkg set scripts.generate="node scripts/generate.mjs"
+          npm pkg set scripts.fallback="node scripts/fallback.mjs"
+          npm pkg set scripts.sitemap="node scripts/build-sitemap.mjs"
 
-      # Transformers.js + onnxruntime-node（失敗しても続行）
-      - name: Install deps (CPU)
+      # 生成用の最低限依存。失敗しても続行できるようにする（|| true）
+      - name: Install deps (transformers + onnxruntime)
         run: |
           npm install --no-audit --no-fund @xenova/transformers@2.17.2 onnxruntime-node@1.18.0 || true
 
-      # 生成に失敗したらフォールバック記事を出す
-      - name: Generate pages (with robust fallback)
+      # 生成に失敗したらフォールバックへ自動切替
+      - name: Generate (with fallback)
         env:
           TRANSFORMERS_CACHE: ./.cache
         run: |
-          node scripts/generate.mjs || node - <<'NODE'
-          const fs = require('fs'); const path = require('path');
-          const outDir = 'content'; if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-          const today = new Date().toISOString().slice(0,10);
-          const topics = [
-            '英語フレーズ_空港_チェックイン',
-            '投資_入門_つみたてのコツ',
-            '旅行_会話_ホテルチェックイン'
-          ];
-          for (const t of topics) {
-            const slug = t.replace(/\s/g,'_').replace(/[\\/:*?"<>|]/g,'');
-            const fname = `${slug}_${today}.html`;
-            const html = `<!doctype html><html lang="ja"><head><meta charset="utf-8"/><link rel="stylesheet" href="../assets/css/styles.css"/><title>${t}</title></head><body><header class="site-header"><h1>${t}</h1><nav><a href="../index.html">Home</a></nav></header><main class="page"><article><h3>フォールバック自動生成</h3><p>本日のAI生成で問題が発生したため、テンプレート記事を出力しました。次回以降は自動で上書きされます。</p><ul><li>要点1</li><li>要点2</li><li>要点3</li></ul><p>まとめ：短い要点を記載。</p></article></main><footer class="site-footer"><small>© <span id="year"></span> Niche AI Lab.</small></footer><script>document.getElementById('year').textContent = new Date().getFullYear();</script></body></html>`;
-            fs.writeFileSync(path.join(outDir, fname), html);
-            console.log('Fallback Generated:', fname);
-          }
-NODE
+          npm run generate || npm run fallback
 
-      - name: Build/refresh sitemap.xml
+      - name: Build sitemap
         run: |
-          node -e "const fs=require('fs');const base='content';const files=fs.readdirSync(base).filter(f=>f.endsWith('.html'));let out='<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n';for(const f of files){out+=`<url><loc>https://s06659333-tech.github.io/niche/${base}/${f}</loc></url>\n`;}out+='</urlset>\n';fs.writeFileSync('sitemap.xml',out)"
+          npm run sitemap
 
       - name: Commit & push
         run: |
