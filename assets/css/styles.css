@@ -1,0 +1,21 @@
+/* Minimal, clean styles */
+:root { --maxw: 900px; }
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans JP, sans-serif; margin: 0; line-height: 1.6; }
+.site-header, .site-footer { padding: 16px; border-bottom: 1px solid #ddd; }
+.site-footer { border-top: 1px solid #ddd; border-bottom: 0; }
+.site-header nav a { margin-right: 12px; text-decoration: none; }
+main { max-width: var(--maxw); margin: 0 auto; padding: 16px; }
+.hero { background: #fafafa; padding: 16px; border: 1px solid #eee; border-radius: 8px; }
+.chat { margin-top: 12px; }
+.chat-log { border: 1px solid #ddd; border-radius: 6px; padding: 12px; height: 320px; overflow: auto; background: #fff; }
+.msg { margin: 8px 0; }
+.msg.user { text-align: right; }
+.msg.assistant { text-align: left; }
+.chat-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 8px; }
+#user-input { width: 100%; padding: 8px; }
+#send-btn { padding: 8px 16px; }
+.status { font-size: 0.9em; opacity: 0.8; margin-top: 6px; }
+.page { background: #fff; padding: 16px; border: 1px solid #eee; border-radius: 8px; }
+.latest ul { list-style: none; padding-left: 0; }
+.latest li { margin-bottom: 6px; }
