@@ -1,9 +1,9 @@
 name: daily-build
 
 on:
-  schedule:
-    - cron: '0 3 * * *'   # 毎日 12:00 JST 相当（03:00 UTC）
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'   # JST 12:00 相当（03:00 UTC）
 
 jobs:
   build:
@@ -14,61 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate 3 fallback posts with Python (no npm)
-        run: |
-          python3 - <<'PY'
-import os, datetime
-os.makedirs("content", exist_ok=True)
-today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
-template = """<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"/>
-<link rel="stylesheet" href="../assets/css/styles.css"/>
-<title>フォールバック記事</title></head>
-<body>
-<header class="site-header"><h1>フォールバック記事</h1><nav><a href="../index.html">Home</a></nav></header>
-<main class="page">
-<article>
-<h3>自動生成の一時フォールバック</h3>
-<p>本日のAI生成に問題が発生したため、テンプレート記事を自動出力しました。次回以降は通常の自動生成に切り替え予定です。</p>
-<ul><li>要点1：ニッチ×網羅×分かりやすさ</li><li>要点2：毎日少量で安定更新</li><li>要点3：引用・免責の明記</li></ul>
-<p>まとめ：まずはサイトを動かし続けることが最優先です。</p>
-</article>
-</main>
-<footer class="site-footer"><small>© <span id="year"></span> Niche AI Lab.</small></footer>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-</body></html>
-"""
-for i in range(1, 4):
-    fname = f"content/fallback_post_{i}_{today}.html"
-    with open(fname, "w", encoding="utf-8") as f:
-        f.write(template)
-    print("Wrote", fname)
-PY
-
-      - name: Build sitemap with Python
-        run: |
-          python3 - <<'PY'
-import os, urllib.parse
-base_url = "https://s06659333-tech.github.io/niche"
-entries = [f"{base_url}/", f"{base_url}/about.html"]
-content_dir = "content"
-if os.path.isdir(content_dir):
-    files = sorted([f for f in os.listdir(content_dir) if f.endswith(".html")])
-    for f in files:
-        entries.append(f"{base_url}/content/{urllib.parse.quote(f)}")
-xml = ['<?xml version="1.0" encoding="UTF-8"?>',
-       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-xml += [f"  <url><loc>{loc}</loc></url>" for loc in entries]
-xml.append('</urlset>')
-with open("sitemap.xml","w",encoding="utf-8") as fp:
-    fp.write("\n".join(xml)+"\n")
-print("sitemap.xml written with", len(entries), "entries")
-PY
-
-      - name: Commit & push
-        run: |
-          git config user.name "content-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          git commit -m "daily fallback content: $(date -u +'%Y-%m-%d')" || echo "No changes"
-          git push
+      - name: Smoke test
+        run: echo "ok"
