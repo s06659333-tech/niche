@@ -1,1 +1,30 @@
+# scripts/generate_fallback.py
+import os, datetime
 
+os.makedirs("content", exist_ok=True)
+today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+
+TEMPLATE = """<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="../assets/css/styles.css"/>
+<title>フォールバック記事</title></head>
+<body>
+<header class="site-header"><h1>フォールバック記事</h1><nav><a href="../index.html">Home</a></nav></header>
+<main class="page">
+<article>
+<h3>自動生成の一時フォールバック</h3>
+<p>本日のAI生成に問題が発生したため、テンプレート記事を自動出力しました。次回以降は通常の自動生成に切り替え予定です。</p>
+<ul><li>要点1：ニッチ×網羅×分かりやすさ</li><li>要点2：毎日少量で安定更新</li><li>要点3：引用・免責の明記</li></ul>
+<p>まとめ：まずはサイトを動かし続けることが最優先です。</p>
+</article>
+</main>
+<footer class="site-footer"><small>© <span id="year"></span> Niche AI Lab.</small></footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body></html>
+"""
+
+for i in range(1, 4):
+    fname = f"content/fallback_post_{i}_{today}.html"
+    with open(fname, "w", encoding="utf-8") as f:
+        f.write(TEMPLATE)
+    print("Wrote", fname)
