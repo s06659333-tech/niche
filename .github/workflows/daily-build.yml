@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ⚠ cache指定は外します（lockfileがないためアノテーションが出る）
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -24,16 +23,33 @@ jobs:
           npm init -y
           npm pkg set scripts.generate="node scripts/generate.mjs"
 
-      # Transformers.js を Node で動かすため onnxruntime-node を追加
+      # Transformers.js + onnxruntime-node（失敗しても続行）
       - name: Install deps (CPU)
         run: |
-          npm install @xenova/transformers@2.17.2 onnxruntime-node@1.18.0
+          npm install --no-audit --no-fund @xenova/transformers@2.17.2 onnxruntime-node@1.18.0 || true
 
-      - name: Generate pages with transformers.js (no API cost)
+      # 生成に失敗したらフォールバック記事を出す
+      - name: Generate pages (with robust fallback)
         env:
           TRANSFORMERS_CACHE: ./.cache
         run: |
-          npm run generate
+          node scripts/generate.mjs || node - <<'NODE'
+          const fs = require('fs'); const path = require('path');
+          const outDir = 'content'; if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+          const today = new Date().toISOString().slice(0,10);
+          const topics = [
+            '英語フレーズ_空港_チェックイン',
+            '投資_入門_つみたてのコツ',
+            '旅行_会話_ホテルチェックイン'
+          ];
+          for (const t of topics) {
+            const slug = t.replace(/\s/g,'_').replace(/[\\/:*?"<>|]/g,'');
+            const fname = `${slug}_${today}.html`;
+            const html = `<!doctype html><html lang="ja"><head><meta charset="utf-8"/><link rel="stylesheet" href="../assets/css/styles.css"/><title>${t}</title></head><body><header class="site-header"><h1>${t}</h1><nav><a href="../index.html">Home</a></nav></header><main class="page"><article><h3>フォールバック自動生成</h3><p>本日のAI生成で問題が発生したため、テンプレート記事を出力しました。次回以降は自動で上書きされます。</p><ul><li>要点1</li><li>要点2</li><li>要点3</li></ul><p>まとめ：短い要点を記載。</p></article></main><footer class="site-footer"><small>© <span id="year"></span> Niche AI Lab.</small></footer><script>document.getElementById('year').textContent = new Date().getFullYear();</script></body></html>`;
+            fs.writeFileSync(path.join(outDir, fname), html);
+            console.log('Fallback Generated:', fname);
+          }
+NODE
 
       - name: Build/refresh sitemap.xml
         run: |
@@ -46,4 +62,3 @@ jobs:
           git add -A
           git commit -m "daily content: $(date -u +'%Y-%m-%d')" || echo "No changes"
           git push
-
