@@ -1,4 +1,6 @@
-// WebLLM chat + latest list builder
+// assets/js/app.js — transformers.js (WebAssembly) 版の軽量チャット
+import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2";
+
 const elLog = document.getElementById('chat-log');
 const elForm = document.getElementById('chat-form');
 const elInput = document.getElementById('user-input');
@@ -14,17 +16,17 @@ function addMsg(role, text) {
   elLog.scrollTop = elLog.scrollHeight;
 }
 
-// Initialize WebLLM
-let engine = null;
+let pipe = null;
+
 (async () => {
   try {
-    engine = new window.MLCEngine();
-    // Model name packaged for WebLLM; can be changed later for quality/size trade-offs.
-    await engine.reload({ model: "Llama-3.2-3B-Instruct-q4f32_1-MLC" });
+    elStatus.textContent = "Loading tiny model… (first time is slow)";
+    // 軽量＆安定。初回はモデルDLで少し待ちます
+    pipe = await pipeline("text2text-generation", "Xenova/flan-t5-small");
     elStatus.textContent = "Model loaded. Ready.";
   } catch (e) {
     console.error(e);
-    elStatus.textContent = "モデルの読み込みに失敗しました。通信環境やブラウザ対応(WebGPU)をご確認ください。";
+    elStatus.textContent = "モデル読込に失敗しました（transformers.js）。ページを再読み込みしてください。";
   }
 })();
 
@@ -34,33 +36,28 @@ elForm.addEventListener('submit', async (e) => {
   if (!q) return;
   addMsg('user', q);
   elInput.value = "";
-  if (!engine) {
+
+  if (!pipe) {
     addMsg('assistant', "モデルが未読込です。少し待ってから再度お試しください。");
     return;
   }
-  elStatus.textContent = "Thinking...";
+
+  elStatus.textContent = "Thinking…";
   try {
-    const completion = await engine.chat.completions.create({
-      messages: [
-        { role: "system", content: "あなたは日本語話者に向けて、簡潔で正確、礼儀正しいAIアシスタントです。必要に応じて英語対訳も併記してください。" },
-        { role: "user", content: q }
-      ],
-      temperature: 0.6,
-      max_tokens: 512
-    });
-    const a = completion.choices[0].message.content;
-    addMsg('assistant', a);
-    elStatus.textContent = "Ready.";
+    const prompt = `以下のユーザー質問に、日本語を優先し簡潔・正確に答えてください。必要に応じて英訳の対訳も併記してください。\n\n質問: ${q}\n\n回答:`;
+    const out = await pipe(prompt, { max_new_tokens: 256 });
+    const a = (out[0]?.generated_text || "").trim();
+    addMsg('assistant', a || "すみません、うまく生成できませんでした。もう一度お試しください。");
   } catch (err) {
     console.error(err);
-    elStatus.textContent = "回答中にエラーが発生しました。";
-    addMsg('assistant', "すみません、もう一度お試しください。");
+    addMsg('assistant', "生成中にエラーが発生しました。もう一度お試しください。");
+  } finally {
+    elStatus.textContent = "Ready.";
   }
 });
 
-// Build "Latest" list by scanning /content directory listing (static guess)
-(async () => {
-  // Static approach: show a fixed set of known files + today file pattern
+// Latest欄のダミー
+(function buildLatest() {
   const list = document.getElementById('latest-list');
   if (!list) return;
   const candidates = [
