@@ -14,15 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ensure content dir & generate 3 fallback posts (bash only)
+      - name: Generate 3 fallback posts with Python (no npm)
         run: |
-          set -e
-          mkdir -p content
-          TODAY="$(date -u +%Y-%m-%d)"
-          for i in 1 2 3; do
-            F="fallback_post_${i}_${TODAY}.html"
-            cat > "content/${F}" <<'HTML'
-<!doctype html>
+          python3 - <<'PY'
+import os, datetime
+os.makedirs("content", exist_ok=True)
+today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+template = """<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"/>
 <link rel="stylesheet" href="../assets/css/styles.css"/>
 <title>フォールバック記事</title></head>
@@ -39,11 +37,15 @@ jobs:
 <footer class="site-footer"><small>© <span id="year"></span> Niche AI Lab.</small></footer>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body></html>
-HTML
-            echo "Wrote content/${F}"
-          done
+"""
+for i in range(1, 4):
+    fname = f"content/fallback_post_{i}_{today}.html"
+    with open(fname, "w", encoding="utf-8") as f:
+        f.write(template)
+    print("Wrote", fname)
+PY
 
-      - name: Build sitemap with Python (robust)
+      - name: Build sitemap with Python
         run: |
           python3 - <<'PY'
 import os, urllib.parse
