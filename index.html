@@ -3,60 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ニッチAI相談室 | Serverless AI Q&A</title>
-  <meta name="description" content="完全無料・完全非対面のサーバーレスAI相談サイト" />
+
+  <!-- タイトル & 説明（重複を解消し1つに統一） -->
+  <title>AI駆け込み寺 | Serverless AI Q&A</title>
+  <meta name="description" content="無料・登録不要。ブラウザ内AIで質問OK。毎日自動更新の記事も。">
+
   <link rel="stylesheet" href="assets/css/styles.css" />
-<!-- SEO 基本 -->
-<link rel="canonical" href="https://s06659333-tech.github.io/niche/">
-<meta name="description" content="ニッチAI相談室。完全無料・サーバー費用ゼロで動くブラウザ内AIに質問＆毎日自動更新の学習記事。">
 
-<!-- Open Graph / Twitter -->
-<meta property="og:title" content="ニッチAI相談室 | Serverless AI Q&A">
-<meta property="og:description" content="無料・完全非対面。ブラウザ内AIに質問できます。毎日自動更新の学習記事も。">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://s06659333-tech.github.io/niche/">
-<meta property="og:image" content="https://s06659333-tech.github.io/niche/assets/og.jpg">
-<meta name="twitter:card" content="summary_large_image">
+  <!-- SEO 基本 -->
+  <link rel="canonical" href="https://s06659333-tech.github.io/niche/">
 
-<!-- JSON-LD（WebSite + 検索ボックス） -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebSite",
-  "name":"ニッチAI相談室",
-  "url":"https://s06659333-tech.github.io/niche/",
-  "potentialAction": {
-    "@type":"SearchAction",
-    "target":"https://s06659333-tech.github.io/niche/?q={search_term_string}",
-    "query-input":"required name=search_term_string"
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="AI駆け込み寺 | Serverless AI Q&A">
+  <meta property="og:description" content="無料・登録不要。ブラウザ内AIで質問OK。毎日自動更新の記事も。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://s06659333-tech.github.io/niche/">
+  <meta property="og:image" content="https://s06659333-tech.github.io/niche/assets/og.jpg">
+  <meta property="og:site_name" content="AI駆け込み寺">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- JSON-LD（WebSite + 検索ボックス） -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"AI駆け込み寺",
+    "url":"https://s06659333-tech.github.io/niche/",
+    "potentialAction": {
+      "@type":"SearchAction",
+      "target":"https://s06659333-tech.github.io/niche/?q={search_term_string}",
+      "query-input":"required name=search_term_string"
+    }
   }
-}
-</script>
-
+  </script>
 </head>
 <body>
   <header class="site-header">
-    <h1>ニッチAI相談室</h1>
-    <p class="tagline">ブラウザ内で動くAI（WebLLM）／無料・完全非対面</p>
+    <h1>AI駆け込み寺</h1>
+    <!-- WebLLM表記を実装に合わせて修正（transformers.js/WASM） -->
+    <p class="tagline">ブラウザ内で動くAI（transformers.js / WASM）／無料・完全非対面</p>
     <nav>
       <a href="./index.html">Home</a>
-      <a href="./content/">Articles</a>
+      <!-- GitHub Pagesはフォルダ一覧を自動表示しないため、記事一覧ページを用意 -->
+      <a href="./content/index.html">Articles</a>
       <a href="./about.html">About</a>
+      <a href="./privacy.html">Privacy</a>
+      <a href="./disclaimer.html">Disclaimer</a>
     </nav>
   </header>
 
   <main>
     <section class="hero">
       <h2>ここでAIに質問できます（サーバー費用ゼロ）</h2>
-      <p>※ 初回はモデルの読み込みに数十秒～数分かかることがあります。Wi‑Fi推奨。</p>
+      <p>※ 初回はモデルの読み込みに数十秒〜数分かかることがあります。Wi-Fi推奨。</p>
+
       <div class="chat">
         <div id="chat-log" class="chat-log" aria-live="polite"></div>
         <form id="chat-form" class="chat-form">
+          <label for="user-input" class="sr-only">質問を入力</label>
           <textarea id="user-input" placeholder="ここに質問を入力..." rows="3"></textarea>
           <button id="send-btn" type="submit">送信</button>
         </form>
         <div id="status" class="status">Loading model…</div>
       </div>
+
+      <noscript>このサイトを利用するにはJavaScriptを有効にしてください。</noscript>
     </section>
 
     <section class="howto">
@@ -71,28 +82,23 @@
 
     <section class="latest">
       <h3>最新コンテンツ / Latest</h3>
-      <ul id="latest-list">
-        <!-- Filled by assets/js/app.js -->
-      </ul>
+      <ul id="latest-list"><!-- Filled by assets/js/app.js --></ul>
+    </section>
+
+    <!-- おすすめリンク（小さな収益導線） -->
+    <section style="margin:16px 0;padding:12px;border:1px solid #eee;border-radius:8px;">
+      <strong>おすすめリソース</strong><br />
+      <a href="https://www.amazon.co.jp/" rel="sponsored nofollow" target="_blank">
+        関連書籍を探す（外部）
+      </a>
     </section>
   </main>
-<!-- おすすめリンク（小さな収益導線） -->
-<section style="margin:16px 0;padding:12px;border:1px solid #eee;border-radius:8px;">
-  <strong>おすすめリソース</strong><br />
-  <a href="https://www.amazon.co.jp/"
-     rel="sponsored nofollow"
-     target="_blank">
-     関連書籍を探す（外部）
-  </a>
-</section>
 
   <footer class="site-footer">
-    <small>© <span id="year"></span> Niche AI Lab. Code: MIT. Content: see sources on each page.</small>
+    <small>© <span id="year"></span> AI駆け込み寺. Code: MIT. Content: see sources on each page.</small>
   </footer>
 
-  <!-- WebLLM (browser-side LLM) -->
-
-<script type="module" src="assets/js/app.js"></script>
-
+  <!-- ブラウザ内推論（transformers.js / WASM） -->
+  <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
