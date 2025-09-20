@@ -2,25 +2,77 @@ name: daily-build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'   # JST 12:00(03:00 UTC)
+    - cron: '0 3 * * *'   # JST 12:00 相当
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate fallback posts
-        run: python3 scripts/generate_fallback.py
+      # ---- Node で transformers.js を使った生成 ----
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
+      - name: Install deps
+        run: |
+          npm init -y
+          npm install @xenova/transformers@2.17.2 onnxruntime-node@1.18.0
+
+      - name: Generate with transformers.js (robust)
+        run: |
+          node scripts/generate.mjs || echo "node generation failed"
+
+      # ---- Python フォールバック（生成物ゼロなら最低3本作成）----
+      - name: Ensure fallback if empty
+        run: |
+          python3 - <<'PY'
+import os, datetime
+os.makedirs("content", exist_ok=True)
+has_new = any(name.endswith(".html") and (datetime.datetime.utcnow().strftime("%Y-%m-%d") in name) for name in os.listdir("content"))
+if not has_new:
+    today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+    template = """<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="../assets/css/styles.css"/></head><body>
+<header class="site-header"><h1>フォールバック記事</h1><nav><a href="../index.html">Home</a></nav></header>
+<main class="page"><article><p>AI生成に失敗したためテンプレートを出力しました。</p></article></main>
+<footer class="site-footer"><small>© <span id="year"></span> Niche AI Lab.</small></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body></html>"""
+    for i in range(1,4):
+        with open(f"content/fallback_post_{i}_{today}.html","w",encoding="utf-8") as f:
+            f.write(template)
+    print("fallback written")
+PY
+
+      # ---- サイトマップ作成（Python）----
       - name: Build sitemap
-        run: python3 scripts/build_sitemap.py
+        run: |
+          python3 - <<'PY'
+import os, urllib.parse
+BASE = "https://s06659333-tech.github.io/niche"
+entries = [f"{BASE}/", f"{BASE}/about.html"]
+if os.path.isdir("content"):
+    for f in sorted(os.listdir("content")):
+        if f.endswith(".html"):
+            entries.append(f"{BASE}/content/{urllib.parse.quote(f)}")
+xml = ['<?xml version="1.0" encoding="UTF-8"?>','<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+xml += [f"  <url><loc>{u}</loc></url>" for u in entries]
+xml.append('</urlset>')
+open("sitemap.xml","w",encoding="utf-8").write("\n".join(xml)+"\n")
+print("sitemap built", len(entries))
+PY
 
       - name: Commit & push
         run: |
           git config user.name "content-bot"
           git config user.email "actions@users.noreply.github.com"
           git add -A
-          git commit -m "daily fallback content: $(date -u +'%Y-%m-%d')" || echo "No changes"
+          git commit -m "daily content: $(date -u +'%Y-%m-%d')" || echo "No changes"
           git push
