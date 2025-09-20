@@ -4,13 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- タイトル & 説明（重複を解消し1つに統一） -->
   <title>AI駆け込み寺 | Serverless AI Q&A</title>
   <meta name="description" content="無料・登録不要。ブラウザ内AIで質問OK。毎日自動更新の記事も。">
 
   <link rel="stylesheet" href="assets/css/styles.css" />
 
-  <!-- SEO 基本 -->
+  <!-- SEO -->
   <link rel="canonical" href="https://s06659333-tech.github.io/niche/">
 
   <!-- Open Graph / Twitter -->
@@ -22,40 +21,34 @@
   <meta property="og:site_name" content="AI駆け込み寺">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- JSON-LD（WebSite + 検索ボックス） -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"AI駆け込み寺",
-    "url":"https://s06659333-tech.github.io/niche/",
-    "potentialAction": {
-      "@type":"SearchAction",
-      "target":"https://s06659333-tech.github.io/niche/?q={search_term_string}",
-      "query-input":"required name=search_term_string"
-    }
-  }
+  {"@context":"https://schema.org","@type":"WebSite","name":"AI駆け込み寺","url":"https://s06659333-tech.github.io/niche/","potentialAction":{"@type":"SearchAction","target":"https://s06659333-tech.github.io/niche/?q={search_term_string}","query-input":"required name=search_term_string"}}
   </script>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
-    <h1>AI駆け込み寺</h1>
-    <!-- WebLLM表記を実装に合わせて修正（transformers.js/WASM） -->
-    <p class="tagline">ブラウザ内で動くAI（transformers.js / WASM）／無料・完全非対面</p>
-    <nav>
-      <a href="./index.html">Home</a>
-      <!-- GitHub Pagesはフォルダ一覧を自動表示しないため、記事一覧ページを用意 -->
-      <a href="./content/index.html">Articles</a>
-      <a href="./about.html">About</a>
-      <a href="./privacy.html">Privacy</a>
-      <a href="./disclaimer.html">Disclaimer</a>
-    </nav>
+    <div class="inner">
+      <div>
+        <h1>AI駆け込み寺</h1>
+        <p class="tagline">ブラウザ内で動くAI（transformers.js / WASM）／無料・完全非対面</p>
+      </div>
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./content/index.html">Articles</a>
+        <a href="./about.html">About</a>
+        <a href="./privacy.html">Privacy</a>
+        <a href="./disclaimer.html">Disclaimer</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <h2>ここでAIに質問できます（サーバー費用ゼロ）</h2>
-      <p>※ 初回はモデルの読み込みに数十秒〜数分かかることがあります。Wi-Fi推奨。</p>
+  <div class="container">
+    <!-- Hero / Chat -->
+    <section class="hero card">
+      <h2>☆ここでAIに質問できます☆</h2>
+      <p class="subtle">初回はモデルの読み込みに数十秒〜数分かかることがあります。Wi-Fi推奨。</p>
 
       <div class="chat">
         <div id="chat-log" class="chat-log" aria-live="polite"></div>
@@ -64,41 +57,43 @@
           <textarea id="user-input" placeholder="ここに質問を入力..." rows="3"></textarea>
           <button id="send-btn" type="submit">送信</button>
         </form>
-        <div id="status" class="status">Loading model…</div>
+        <div id="status" class="status">Model loaded. Ready.</div>
       </div>
-
       <noscript>このサイトを利用するにはJavaScriptを有効にしてください。</noscript>
     </section>
 
-    <section class="howto">
+    <!-- How to -->
+    <section class="howto card">
       <h3>使い方 / How to use</h3>
       <ol>
         <li>質問を入力して送信（英日どちらでもOK）。</li>
         <li>回答を待ちます（初回はモデル読込で時間がかかります）。</li>
         <li>履歴はブラウザ内に残り、サーバーには送信されません。</li>
       </ol>
-      <p>All inference happens in your browser. No server. No API fees.</p>
+      <p class="subtle">All inference happens in your browser. No server. No API fees.</p>
     </section>
 
-    <section class="latest">
+    <!-- Latest -->
+    <section class="latest card">
       <h3>最新コンテンツ / Latest</h3>
       <ul id="latest-list"><!-- Filled by assets/js/app.js --></ul>
+      <p class="subtle" style="margin-top:8px;">すべてのURLは <a href="./sitemap.xml" target="_blank" rel="nofollow">sitemap.xml</a> からも確認できます。</p>
     </section>
 
-    <!-- おすすめリンク（小さな収益導線） -->
-    <section style="margin:16px 0;padding:12px;border:1px solid #eee;border-radius:8px;">
-      <strong>おすすめリソース</strong><br />
-      <a href="https://www.amazon.co.jp/" rel="sponsored nofollow" target="_blank">
-        関連書籍を探す（外部）
-      </a>
+    <!-- Affiliate / resource -->
+    <section class="card" style="display:flex;gap:12px;align-items:center;">
+      <div style="font-weight:700;">おすすめリソース</div>
+      <a href="https://www.amazon.co.jp/" rel="sponsored nofollow" target="_blank">関連書籍を探す（外部）</a>
     </section>
-  </main>
 
-  <footer class="site-footer">
-    <small>© <span id="year"></span> AI駆け込み寺. Code: MIT. Content: see sources on each page.</small>
-  </footer>
+    <footer class="site-footer">
+      <small>© <span id="year"></span> AI駆け込み寺. Code: MIT. Content: see sources on each page.</small>
+    </footer>
+  </div>
 
-  <!-- ブラウザ内推論（transformers.js / WASM） -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
