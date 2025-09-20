@@ -1,4 +1,4 @@
-// assets/js/app.js — transformers.js (WASM) 進捗表示つき安定版
+// transformers.js (WASM) 進捗表示つき・無効出力ガード版
 import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js";
 
 const elLog = document.getElementById('chat-log');
@@ -16,10 +16,10 @@ function addMsg(role, text) {
   elLog.scrollTop = elLog.scrollHeight;
 }
 
-// ▼ 安定化（低メモリ環境や拡張機能の干渉に強く）
-env.allowLocalModels = false;                 // すべてCDNから取得
-env.backends.onnx.wasm.numThreads = 1;        // 1スレッドで安定化
-env.backends.onnx.wasm.proxy = false;         // WebWorker経由を無効化
+// 安定化（低メモリ環境向け）
+env.allowLocalModels = false;
+env.backends.onnx.wasm.numThreads = 1;
+env.backends.onnx.wasm.proxy = false;
 
 let pipe = null;
 
@@ -27,22 +27,16 @@ let pipe = null;
   try {
     let lastPct = 0;
     elStatus.textContent = "モデル取得を開始…";
-
     const progress_callback = (data) => {
-      // data: { status, progress, loaded, total, file }
       if (data.status === 'progress' && data.progress != null) {
         const pct = Math.round(data.progress * 100);
-        if (pct !== lastPct) {
-          elStatus.textContent = `ダウンロード中… ${pct}%`;
-          lastPct = pct;
-        }
+        if (pct !== lastPct) { elStatus.textContent = `ダウンロード中… ${pct}%`; lastPct = pct; }
       } else if (data.status) {
-        elStatus.textContent = data.status; // 'Fetching', 'Resolving model', etc.
+        elStatus.textContent = data.status;
       }
     };
-
-    // 軽量モデル（回線に優しい）
-    pipe = await pipeline("text2text-generation", "Xenova/t5-small", { progress_callback });
+    // ★ 指示チューニング済み（日本語質問でも安定）
+    pipe = await pipeline("text2text-generation", "Xenova/flan-t5-small", { progress_callback });
     elStatus.textContent = "Model loaded. Ready.";
   } catch (e) {
     console.error(e);
@@ -50,7 +44,13 @@ let pipe = null;
   }
 })();
 
-// 送信
+function sanitize(output) {
+  const s = (output || "").trim();
+  // 全部が記号/空白なら無効とみなす
+  if (!s || /^[\s:：・。、…._-]+$/.test(s) || s.length < 5) return null;
+  return s;
+}
+
 elForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const q = (elInput.value || "").trim();
@@ -65,10 +65,18 @@ elForm.addEventListener('submit', async (e) => {
 
   elStatus.textContent = "Thinking…";
   try {
-    const prompt = `以下のユーザー質問に、日本語を優先し簡潔・正確に答えてください。必要に応じて英訳の対訳も併記してください。\n\n質問: ${q}\n\n回答:`;
+    // 日本語での回答を明示指示（FLANに最適化）
+    const prompt = [
+      "You are a helpful assistant. Reply in Japanese, concise and clear.",
+      "If the question is about how to use this site, give short steps.",
+      "Question:", q,
+      "Answer in Japanese:"
+    ].join("\n");
+
     const out = await pipe(prompt, { max_new_tokens: 180 });
-    const a = (out[0]?.generated_text || "").trim();
-    addMsg('assistant', a || "すみません、うまく生成できませんでした。もう一度お試しください。");
+    const raw = (out[0]?.generated_text || "");
+    const a = sanitize(raw) || "うまく生成できませんでした。もう一度お試しください。（別の表現で質問すると改善することがあります）";
+    addMsg('assistant', a);
   } catch (err) {
     console.error(err);
     addMsg('assistant', "生成中にエラーが発生しました。もう一度お試しください。");
