@@ -31,7 +31,12 @@
   <header class="site-header">
     <div class="inner">
       <div class="brand">
-        <div class="brand-badge" aria-hidden="true"></div>
+        <!-- 鳥居バッジ（インラインSVG） -->
+        <div class="torii" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M5 6v3m14-3v3M7 9h10M9 9v10m6-10v10M9 19h6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div>
           <h1>AI駆け込み寺</h1>
           <p class="tagline">ブラウザ内で動くAI（transformers.js / WASM）／無料・完全非対面</p>
@@ -45,33 +50,46 @@
         <a href="./disclaimer.html">Disclaimer</a>
       </nav>
     </div>
+    <!-- 波の区切り -->
+    <div class="wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+        <path d="M0,40 C200,90 400,0 720,50 C1040,100 1240,20 1440,60 L1440,0 L0,0 Z" fill="rgba(255,255,255,.5)"></path>
+      </svg>
+    </div>
   </header>
 
   <div class="container">
     <!-- Hero / Chat -->
     <section class="hero card">
-      <h2>ここでAIに質問できます</h2>
+      <h2>ここでAIに質問できます（サーバー費用ゼロ）</h2>
       <p class="subtle">初回はモデルの読み込みに数十秒〜数分かかることがあります。Wi-Fi推奨。</p>
 
       <div class="chat">
         <div id="chat-log" class="chat-log" aria-live="polite"></div>
         <form id="chat-form" class="chat-form">
           <label for="user-input" class="sr-only">質問を入力</label>
-          <textarea id="user-input" placeholder="ここに質問を入力..." rows="3"></textarea>
-          <button id="send-btn" type="submit">送信</button>
+          <textarea id="user-input" placeholder="お願いごと（質問）をここに…" rows="3"></textarea>
+          <button id="send-btn" type="submit">お願いを送る</button>
         </form>
         <div id="status" class="status">Model loaded. Ready.</div>
       </div>
       <noscript>このサイトを利用するにはJavaScriptを有効にしてください。</noscript>
     </section>
 
+    <!-- 祈願の書き方（Callout） -->
+    <section class="callout">
+      <strong>🧧 祈願（質問）の書き方コツ</strong>
+      <div>① 目的：<em>何を実現したいか</em>　② 条件：<em>前提・制約</em>　③ 形式：<em>出力フォーマット</em></div>
+      <div class="subtle">例）「英語学習の1週間計画を作成。平日30分／土日60分。表形式で。」</div>
+    </section>
+
     <!-- How to -->
     <section class="howto card">
       <h3>使い方 / How to use</h3>
       <ol>
-        <li>質問を入力して送信（英日どちらでもOK）。</li>
-        <li>回答を待ちます（初回はモデル読込で時間がかかります）。</li>
-        <li>履歴はブラウザ内に残り、サーバーには送信されません。</li>
+        <li>お願い（質問）を入力して「お願いを送る」。</li>
+        <li>初回はモデル読込で時間がかかります（数十秒〜数分）。</li>
+        <li>処理はブラウザ内のみ。サーバー送信なし・費用ゼロ。</li>
       </ol>
       <p class="subtle">All inference happens in your browser. No server. No API fees.</p>
     </section>
@@ -80,7 +98,7 @@
     <section class="latest card">
       <h3>最新コンテンツ / Latest</h3>
       <ul id="latest-list"><!-- Filled by assets/js/app.js --></ul>
-      <p class="subtle" style="margin-top:8px;">すべてのURLは <a href="./sitemap.xml" target="_blank" rel="nofollow">sitemap.xml</a> からも確認できます。</p>
+      <p class="subtle" style="margin-top:8px;">全URLは <a href="./sitemap.xml" target="_blank" rel="nofollow">sitemap.xml</a> からも確認できます。</p>
     </section>
 
     <!-- Affiliate / resource -->
@@ -94,9 +112,7 @@
     </footer>
   </div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
