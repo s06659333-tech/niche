@@ -5,9 +5,18 @@ os.makedirs("content", exist_ok=True)
 today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
 
 TEMPLATE = """<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"/>
-<link rel="stylesheet" href="../assets/css/styles.css"/>
-<title>フォールバック記事</title></head>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>フォールバック記事</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+
+  <!-- ▼▼ SEO 基本（記事ページ用） ▼▼ -->
+  <link rel="canonical" href="">
+  <meta name="description" content="自動生成テンプレ記事。学習の要点を簡潔に解説します。">
+  <meta property="og:type" content="article">
+  <!-- ▲▲ ここまで（必要なら後で書き換えOK） ▲▲ -->
+</head>
 <body>
 <header class="site-header"><h1>フォールバック記事</h1><nav><a href="../index.html">Home</a></nav></header>
 <main class="page">
@@ -23,7 +32,7 @@ TEMPLATE = """<!doctype html>
 </body></html>
 """
 
-for i in range(1, 4):
+for i in range(1, 3+1):
     fname = f"content/fallback_post_{i}_{today}.html"
     with open(fname, "w", encoding="utf-8") as f:
         f.write(TEMPLATE)
