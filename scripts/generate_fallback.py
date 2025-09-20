@@ -23,6 +23,7 @@ TEMPLATE = """<!doctype html>
   <meta property="og:type" content="article">
   <meta property="og:title" content="フォールバック記事">
   <meta property="og:description" content="自動生成テンプレ記事。学習の要点を簡潔に解説します。">
+  <meta property="og:image" content="https://s06659333-tech.github.io/niche/assets/og.jpg">
   <!-- ▲▲ ここまで（必要なら後で書き換えOK） ▲▲ -->
 </head>
 <body>
