@@ -1,25 +1,15 @@
 # scripts/generate_fallback.py
-# 目的：
-# - 毎回必ず3本のフォールバック記事を生成（AI生成が失敗しても公開が止まらない）
-# - 各記事の <head> に SEO 用メタ（canonical/description/OG）を自動挿入
-# 使い方：
-# 1) このファイルを保存
-# 2) Actions -> daily-build を Run
-# 3) content/ に fallback_post_*.html（今日の日付）が3本できる
+# 各記事の <head> に canonical を「完全URL」で自動挿入する版
 
 import os
 import datetime
 
-# ★あなたのサイトURL（最後のスラッシュは付けない）
+# ←←← ここはあなたのサイトURL（末尾スラッシュなし）
 BASE = "https://s06659333-tech.github.io/niche"
 
-# 出力ディレクトリを用意
 os.makedirs("content", exist_ok=True)
-
-# 本日の日付（例: 2025-09-20）
 today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
 
-# 記事のHTMLテンプレート（{canonical} は後で置換）
 TEMPLATE = """<!doctype html>
 <html lang="ja">
 <head>
@@ -55,17 +45,12 @@ TEMPLATE = """<!doctype html>
 """
 
 def main():
-    # 本日分を 1〜3 の3本生成
     for i in range(1, 4):
-        # 出力ファイル名（例：fallback_post_1_2025-09-20.html）
-        fname = f"fallback_post_{i}_{today}.html"
-        # 各記事の正規URL（canonical に入れる）
-        canonical = f"{BASE}/content/{fname}"
-        # ファイルへ書き込み
-        target_path = os.path.join("content", fname)
-        with open(target_path, "w", encoding="utf-8") as f:
+        name = f"fallback_post_{i}_{today}.html"
+        canonical = f"{BASE}/content/{name}"
+        with open(os.path.join("content", name), "w", encoding="utf-8") as f:
             f.write(TEMPLATE.format(canonical=canonical))
-        print("Wrote", target_path)
+        print("Wrote", name)
 
 if __name__ == "__main__":
     main()
