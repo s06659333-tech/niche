@@ -130,3 +130,30 @@ elForm.addEventListener("submit", async (e) => {
     elStatus.textContent = "Ready.";
   }
 });
+// --- UTM自動付与（data-track付きの外部リンクだけ対象） ---
+(function () {
+  const UTM = {
+    source: 'niche',
+    medium: 'link',
+    // A/B等を載せたいときは <body data-utm-campaign="..."> を使う
+    campaign: document.body.dataset.utmCampaign || 'sitewide'
+  };
+
+  function addUTM(url, slot) {
+    try {
+      const u = new URL(url, location.href);
+      // 自サイトは除外
+      if (u.hostname.endsWith('github.io')) return url;
+      u.searchParams.set('utm_source', UTM.source);
+      u.searchParams.set('utm_medium', UTM.medium);
+      u.searchParams.set('utm_campaign', UTM.campaign);
+      if (slot) u.searchParams.set('utm_content', slot); // どの位置のリンクか
+      return u.toString();
+    } catch { return url; }
+  }
+
+  document.querySelectorAll('a[data-track][href]').forEach(a => {
+    const slot = a.dataset.slot || 'inline';
+    a.href = addUTM(a.href, slot);
+  });
+})();
