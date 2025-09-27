@@ -184,3 +184,22 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   justify-content: center;
 }
 .trustline span { white-space: nowrap; }
+/* --- CTA helper & trustline (minimal polish) --- */
+.cta-helper{
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #6b7280;           /* subdued gray */
+}
+.trustline{
+  display: grid;
+  gap: 4px;
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #374151;
+  background: #f8fafc;      /* very light */
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+}
+.trustline span{ display: inline-block; }
