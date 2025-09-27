@@ -167,3 +167,20 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   .site-header .inner{grid-template-columns:1fr}
   .chat-form{grid-template-columns:1fr}
 }
+/* --- trustline (Hero 下のミニ表記) --- */
+.trustline{
+  max-width: 980px;
+  margin: 8px auto 24px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #475569;                 /* 落ち着いたグレー */
+  background: #ffffffcc;          /* 半透明の白(ガラス感) */
+  backdrop-filter: blur(6px);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.trustline span { white-space: nowrap; }
