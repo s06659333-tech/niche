@@ -203,3 +203,6 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   border-radius: 10px;
 }
 .trustline span{ display: inline-block; }
+/* ヘッダーの鳥居アイコンを1:1で固定 */
+.brand .torii svg { width: 22px; height: 22px; aspect-ratio: 1 / 1; }
+.brand .torii { display: inline-flex; align-items: center; }
