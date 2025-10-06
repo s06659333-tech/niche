@@ -124,6 +124,24 @@
    target="_blank" rel="sponsored nofollow"
    data-track data-slot="hero-box-a"
    class="cta-btn">関連書籍を探す（外部）</a>
+<script>
+  // ヒーローCTAの文言A/B
+  (function () {
+    var el = document.getElementById('hero-cta');
+    if (!el) return;
+
+    // 2バリアント（必要に応じて文言だけ変更OK）
+    var variants = [
+      { text: '関連書籍を探す（外部）', slot: 'hero-box-a' }, // 既定：説明系
+      { text: '最短で上達する入門書をみる', slot: 'hero-box-b' } // 直球メリット訴求
+    ];
+
+    // 50/50 で選択
+    var v = variants[Math.random() < 0.5 ? 0 : 1];
+    el.textContent = v.text;
+    el.dataset.slot = v.slot; // ← utm_content に反映される
+  })();
+</script>
 
 
   <!-- 例：内部の関連記事。なければこの行は省略可 -->
