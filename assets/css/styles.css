@@ -363,3 +363,26 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   letter-spacing: .01em;
   color: #6b7280;            /* gray-500 相当 */
 }
+/* ===== Hero カードの視認性 & 質感アップ ===== */
+.hero .card{
+  border-radius: 18px;              /* 角丸を少し大きく */
+  padding: 20px;                    /* 内側の余白を増やす（既存より少し広めに） */
+  box-shadow:
+    0 12px 30px rgba(15, 23, 42, .06),   /* ソフトな落ち影 */
+    0 2px 6px rgba(15, 23, 42, .05);     /* 近接の影で輪郭をくっきり */
+  backdrop-filter: saturate(110%) blur(0.3px); /* ほんの少しだけ質感を足す（対応ブラウザで） */
+}
+
+/* テキストエリアと送信行のなめらかさを揃える */
+.hero .card textarea,
+.hero .card .status,
+.hero .card .chat-log{
+  border-radius: 12px;
+}
+
+/* 送信ボタン周辺の行間・段差を微調整 */
+.hero .card .cta-helper{
+  margin: 8px 0 6px;
+  font-size: .92rem;
+  color: #6b7280; /* gray-500 */
+}
