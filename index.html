@@ -115,14 +115,19 @@
     </section>
 
     <!-- Affiliate / resource -->
-    <section class="promo-card card" style="display:flex;gap:12px;align-items:center;">
+<section class="promo-card" aria-label="おすすめ">
   <strong>おすすめリソース</strong>
-  <a href="https://www.amazon.co.jp/" rel="sponsored nofollow" target="_blank"
-     data-track data-slot="hero-box">
-    読書法｜今日からAI理解が速くなる → 今すぐ見る（外部）
-  </a>
-</section>
 
+  <!-- 外部：Amazon（UTMは自動付与。data-track と data-slot は残す） -->
+  <a href="https://www.amazon.co.jp/"
+     target="_blank" rel="sponsored nofollow"
+     data-track data-slot="hero-box"
+     class="cta-btn">関連書籍を探す（外部）</a>
+
+  <!-- 例：内部の関連記事。なければこの行は省略可 -->
+  <a href="./content/intro-books.html"
+     class="cta-btn secondary">入門向け3選</a>
+</section>
 
     <footer class="site-footer">
       <small>© <span id="year"></span> AI駆け込み寺. Code: MIT. Content: see sources on each page.</small>
