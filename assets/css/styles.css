@@ -386,3 +386,48 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   font-size: .92rem;
   color: #6b7280; /* gray-500 */
 }
+/* ===== フォームの可読性・操作感アップ ===== */
+.chat-form textarea{
+  width: 100%;
+  min-height: 120px;            /* 初期の高さを少し確保 */
+  padding: 12px 14px;
+  line-height: 1.7;
+  font-size: 15.5px;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 12px;
+  outline: none;
+  resize: vertical;             /* 高さだけユーザーが変えられる */
+  background: #fff;
+}
+
+.chat-form textarea::placeholder{
+  color: #9aa3af;               /* グレーで主張を抑える */
+}
+
+.chat-form textarea:focus{
+  border-color: rgba(99,102,241,.45);  /* indigo系の淡い色 */
+  box-shadow: 0 0 0 4px rgba(99,102,241,.12);
+}
+
+.chat-form button#send-btn{
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* ステータスの読みやすさ */
+.status{
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+}
+
+/* モバイル最適化 */
+@media (max-width: 560px){
+  .chat-form textarea{ min-height: 140px; font-size: 16px; } /* モバイルで見やすく */
+  .status{ font-size: 12.5px; }
+}
