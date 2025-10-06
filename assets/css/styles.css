@@ -540,3 +540,27 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   }
   .promo-card a{ color:#e6f0ff; }
 }
+/* ---- CTA buttons in promo ---- */
+.cta-btn{
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,.1);
+  background:#fff;
+  font-weight:700;
+  text-decoration:none;
+  transition:transform .12s ease, box-shadow .12s ease, background .12s;
+}
+.cta-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(16,24,40,.10);
+  text-decoration:none;
+}
+.cta-btn.secondary{
+  background:#f6f7fb;
+  border-color:rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  .cta-btn{ background:#14181f; border-color:rgba(255,255,255,.12); }
+  .cta-btn.secondary{ background:#0f141a; }
+}
