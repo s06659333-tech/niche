@@ -264,3 +264,19 @@ ol{padding-left:1.2rem;margin:8px 0 0}
     font-size: 0.78rem;
   }
 }
+/* ===== Hero カードの存在感を少しアップ ===== */
+.hero {
+  margin-top: 20px;            /* 波背景との距離を少しだけ取る */
+}
+
+.hero .card {
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.08); /* ほんの少し強め */
+  backdrop-filter: saturate(130%) blur(1.5px);
+}
+
+/* モバイルは距離を気持ち広くして余白感を出す */
+@media (max-width: 560px){
+  .hero { margin-top: 28px; }
+  .hero .card { box-shadow: 0 12px 36px rgba(0,0,0,0.10); }
+}
