@@ -336,3 +336,30 @@ ol{padding-left:1.2rem;margin:8px 0 0}
 @media (prefers-reduced-motion: reduce) {
   #send-btn { transition: none; }
 }
+/* ===== Hero 見出しの視認性アップ（HTML編集不要） ===== */
+.hero h2{
+  /* サイズは端末に応じて自動調整（最小22px〜最大30px） */
+  font-size: clamp(22px, 1.6rem + 0.8vw, 30px);
+  font-weight: 700;          /* 少し太めに */
+  letter-spacing: .02em;     /* 軽く字間を広げて読みやすく */
+  line-height: 1.35;
+  margin: 0 0 10px;
+  /* 下半分にほんのり色を敷いて強調（下線より上品） */
+  background-image: linear-gradient(
+    to top,
+    rgba(99,102,241,.16),     /* #6366F1 / indigo の淡い色 */
+    rgba(99,102,241,0) 58%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 55%;  /* 文字の下側だけハイライト */
+  background-position: 0 100%;
+  /* ほんの少しの影でコントラストを補強（淡い背景でも読める） */
+  text-shadow: 0 1px 0 rgba(255,255,255,.35);
+}
+
+/* ヒーロー見出しの説明行（.subtle等がある場合）も少し読みやすく */
+.hero .subtle{
+  font-size: 0.95rem;
+  letter-spacing: .01em;
+  color: #6b7280;            /* gray-500 相当 */
+}
