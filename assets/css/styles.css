@@ -476,3 +476,22 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   width:14px; height:14px; border-radius:50%;
   box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
+/* ===== おすすめ（promo-card）の見出しにもアイコンを表示 ===== */
+.promo-card strong{
+  position: relative;
+  display: inline-block;
+  padding-left: 24px;        /* アイコン分の余白 */
+  margin-bottom: 6px;
+}
+
+/* 丸いアクセント（他セクションとトーンを合わせる） */
+.promo-card strong::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#f43f5e,#ff7aa2); /* ❤️ おすすめ＝赤系 */
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
