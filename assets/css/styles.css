@@ -206,3 +206,34 @@ ol{padding-left:1.2rem;margin:8px 0 0}
 /* ヘッダーの鳥居アイコンを1:1で固定 */
 .brand .torii svg { width: 22px; height: 22px; aspect-ratio: 1 / 1; }
 .brand .torii { display: inline-flex; align-items: center; }
+/* ===== Header brand（アイコン＋サイト名を横並び、タグラインは下） ===== */
+.site-header .brand{
+  display: grid;
+  grid-template-columns: auto 1fr; /* 左：アイコン / 右：文字 */
+  grid-template-rows: auto auto;   /* 1行目：h1 / 2行目：tagline */
+  column-gap: 8px;
+  align-items: center;
+}
+
+.site-header .brand .torii{
+  width: 22px;
+  height: 22px;
+  grid-column: 1;
+  grid-row: 1 / span 2;            /* アイコンは2行ぶち抜きで縦中央 */
+}
+
+.site-header .brand h1{
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  line-height: 1.2;
+  font-size: 1.25rem;
+}
+
+.site-header .brand .tagline{
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.72;
+}
