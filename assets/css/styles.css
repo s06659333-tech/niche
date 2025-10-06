@@ -302,3 +302,37 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   letter-spacing: 0.02em;
   margin-bottom: 0.7rem;
 }
+/* ===== CTA: 「お願いを送る」ボタンの微アニメ ===== */
+#send-btn {
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease,
+    background-position 300ms ease;
+  background-size: 200% 100%;           /* グラデを少し動かす下準備 */
+  background-position: 0% 0%;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+  will-change: transform, box-shadow, filter;
+}
+
+#send-btn:hover {
+  transform: translateY(-2px);          /* ほんの少し持ち上げる */
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  filter: saturate(1.06);                /* ほんのり鮮やかに */
+  background-position: 100% 0%;          /* グラデがスッと流れる */
+}
+
+#send-btn:active {
+  transform: translateY(0);              /* クリック中は戻す */
+  box-shadow: 0 6px 16px rgba(0,0,0,.10);
+}
+
+#send-btn:focus-visible {
+  outline: 3px solid rgba(99,102,241,.35); /* 視認性の高いフォーカス */
+  outline-offset: 2px;
+}
+
+/* 動きを控えたい人への配慮 */
+@media (prefers-reduced-motion: reduce) {
+  #send-btn { transition: none; }
+}
