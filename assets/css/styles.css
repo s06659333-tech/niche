@@ -431,3 +431,48 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   .chat-form textarea{ min-height: 140px; font-size: 16px; } /* モバイルで見やすく */
   .status{ font-size: 12.5px; }
 }
+/* ===== カード見出し（How to / Latest / おすすめ）の視認性アップ ===== */
+.card h3{
+  position: relative;
+  padding-left: 28px;             /* アイコン分の余白 */
+  margin: 0 0 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+/* デフォルトのアイコン（丸＋点） */
+.card h3::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#6366F1,#22d3ee);
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
+
+/* セクション別にアイコンを変える（HTMLはそのまま） */
+.howto.card h3::before{
+  background: linear-gradient(135deg,#10b981,#34d399);       /* ✅ How to = 緑系 */
+}
+.latest.card h3::before{
+  background: linear-gradient(135deg,#f59e0b,#fbbf24);       /* 📰 Latest = 黄系 */
+}
+.callout.card h3::before,
+.promo-card .promo-title::before{
+  /* おすすめなどの小カード */
+  background: linear-gradient(135deg,#f43f5e,#ff7aa2);       /* ❤️ おすすめ = 赤系 */
+}
+
+/* 小カードのタイトル（promo）も合わせる */
+.promo-card .promo-title{
+  position: relative;
+  padding-left: 24px;
+}
+.promo-card .promo-title::before{
+  content:"";
+  position:absolute; left:0; top:50%; transform:translateY(-50%);
+  width:14px; height:14px; border-radius:50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
