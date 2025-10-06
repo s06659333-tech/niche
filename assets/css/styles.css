@@ -280,3 +280,25 @@ ol{padding-left:1.2rem;margin:8px 0 0}
   .hero { margin-top: 28px; }
   .hero .card { box-shadow: 0 12px 36px rgba(0,0,0,0.10); }
 }
+/* ===== リスト系カードの読みやすさを微調整 ===== */
+.card ol,
+.card ul {
+  line-height: 1.8;           /* 行間ちょい広め */
+  margin: 0.6rem 0;           /* リスト全体の上下余白 */
+  padding-left: 1.2rem;       /* 箇条書きの字下げを少し深く */
+}
+
+.card li + li {
+  margin-top: 0.35rem;        /* 箇条書きの項目間に少し隙間 */
+}
+
+.card p {
+  line-height: 1.9;           /* 段落も読みやすく */
+  margin: 0.6rem 0;           /* 段落の上下余白 */
+}
+
+/* How to / 最新 など “セクション見出し”の微強調 */
+.card h3 {
+  letter-spacing: 0.02em;
+  margin-bottom: 0.7rem;
+}
